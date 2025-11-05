@@ -11,14 +11,14 @@ Model name is converted to lowercase for the collection name:
 - BlogPost -> "blogs" collection
 """
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from typing import Optional
 
 # Example schemas (replace with your own):
 
 class User(BaseModel):
     """
-    Users collection schema
+    Example users collection schema
     Collection name: "user" (lowercase of class name)
     """
     name: str = Field(..., description="Full name")
@@ -29,7 +29,7 @@ class User(BaseModel):
 
 class Product(BaseModel):
     """
-    Products collection schema
+    Example products collection schema
     Collection name: "product" (lowercase of class name)
     """
     title: str = Field(..., description="Product title")
@@ -38,11 +38,14 @@ class Product(BaseModel):
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
 
-# Add your own schemas here:
-# --------------------------------------------------
-
-# Note: The Flames database viewer will automatically:
-# 1. Read these schemas from GET /schema endpoint
-# 2. Use them for document validation when creating/editing
-# 3. Handle all database operations (CRUD) directly
-# 4. You don't need to create any database endpoints!
+# Auth-related schema for Vani Bond
+class Account(BaseModel):
+    """
+    Accounts collection schema for authentication
+    Collection name: "account"
+    """
+    name: str = Field(..., min_length=2, max_length=60)
+    email: EmailStr
+    password_hash: str = Field(..., description="BCrypt password hash")
+    avatar_url: Optional[str] = Field(None, description="Optional profile avatar URL")
+    onboarded: bool = Field(False, description="Whether profile basics are filled")
